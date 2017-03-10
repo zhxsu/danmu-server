@@ -3,7 +3,7 @@ danmu-server
 
 弹幕服务器，其客户端项目见[danmu-client](https://github.com/zhxsu/danmu-client)。
 
-**欲使用此项目，客户端需要使用对应的版本。已发布的服务端均已写明对应的客户端版本号，开发分支内的服务端版本仅对应开发分支的客户端。**
+**请使用对应版本的客户端。**
 
 ## 功能特色
 - 跨平台；
@@ -14,10 +14,8 @@ danmu-server
 - 关键词替换、拦截功能；
 - 弹幕记录；
 - 扩展；
-   - 新浪微博登录扩展（需要开启缓存）；
    - 自动封禁功能扩展（需要开启缓存）；
    - 审核扩展；
-   - 直播拉取扩展
 - 删除单条弹幕功能；
 - 易于部署，简单高效。
 
@@ -32,6 +30,8 @@ danmu-server
 
 #### Nodejs
  必须安装[Nodejs](https://nodejs.org/)。强烈推荐使用最新版本Nodejs。
+ 
+ 若运行时报错，请检查依赖包的安装情况，可以用```npm install```来解决依赖问题。
 ##### 在Node 5.1+ / 6.x使用
  无需任何附加操作，直接使用``npm start``就可以启动。
  
@@ -52,8 +52,6 @@ danmu-server
   先按照Node 4.0的方法进行编译，编译后使用``npm run start-0.12``启动。
   
 #### 数据库
- 如使用``csv``，可无视此节。
-
  默认使用``MySQL``数据库。如需使用，需检查[MariaDB](https://mariadb.org/)或[MySQL](https://www.mysql.com/)的安装状态。支持``5.0+``。安装完成后，请创建相应的数据库。
 
  如使用``MongoDB``数据库，请检查[MongoDB](https://www.mongodb.org/)的安装状态。然后需要在安装完成后执行：``npm install mongodb``。
@@ -179,22 +177,7 @@ danmu-server
 }
 ```
 
-### 直播同步
 
-此扩展基于[danmu](https://github.com/littlecodersh/danmu)项目开发，需要安装Python 2.7+ 或 Python 3.5+。在启用前，你首先需要
-```bash
-pip install danmu
-```
-
-才可打开。
-
-```javascript
-"livesync": { // 新浪微博扩展
-	"房间名": {
-		"liveUrl": '', // 直播网站地址
-	}
-}
-```
 ## 常见问题
 ### 数据库相关
 ``{ [Error: Connection lost: The server closed the connection.] fatal: true, code: 'PROTOCOL_CONNECTION_LOST' }``
@@ -203,10 +186,10 @@ pip install danmu
 
 ## 搭配项目
 
-- [danmu-client](https://github.com/zsxsoft/danmu-client)
+- [danmu-client](https://github.com/zhxsu/danmu-client)
 
 ## 协议
 The MIT License (MIT)
 
 ## 开发者
-zsx - http://www.zsxsoft.com / 博客 - http://blog.zsxsoft.com
+zsx - http://www.zsxsoft.com / Modified by df7c5117
