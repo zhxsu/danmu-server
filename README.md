@@ -1,10 +1,9 @@
 danmu-server
 ================
-[![David deps](https://david-dm.org/zsxsoft/danmu-server.svg)](https://david-dm.org/zsxsoft/danmu-server)
 
-弹幕服务器，其客户端项目见[danmu-client](https://github.com/zsxsoft/danmu-client)。
+弹幕服务器，其客户端项目见[danmu-client](https://github.com/zhxsu/danmu-client)。
 
-**欲使用此项目，客户端需要使用对应的版本。[已发布的服务端](https://github.com/zsxsoft/danmu-server/releases)均已写明对应的客户端版本号，开发分支内的服务端版本仅对应开发分支的客户端。**
+**欲使用此项目，客户端需要使用对应的版本。已发布的服务端均已写明对应的客户端版本号，开发分支内的服务端版本仅对应开发分支的客户端。**
 
 ## 功能特色
 - 跨平台；
@@ -22,12 +21,9 @@ danmu-server
 - 删除单条弹幕功能；
 - 易于部署，简单高效。
 
-## 后台截图
-![后台截图](http://zsxsoft.github.io/danmu-server/management.png)
-
 ## 一些警告
 
-稳定版请于[Release](https://github.com/zsxsoft/danmu-server/releases)手动下载。
+稳定版请于Release手动下载。
 
 
 ## 部署方式
@@ -72,40 +68,18 @@ danmu-server
 
 
 ### 直接安装
- 1. 配置MariaDB，创建数据库等，不需要创建数据表。
+ 1. 配置MariaDB/MySQL，创建数据库等，不需要创建数据表。
  2. 修改``config.js``，使其参数与环境相符。
  3. 切换到命令行或终端，``cd``到程序所在目录执行``npm install``，安装程序依赖库。
  4. 现在，你可以直接``npm start``启动。
-
-### Docker安装
-
-直接用``Docker``安装的话，镜像内是含``MariaDB``的。如果不需要，请根据``Dockerfile``内的提示手动删除。
- 1. [安装Docker](http://yeasy.gitbooks.io/docker_practice/content/install/index.html)。
- 2. ``config.js``调整配置。
- 3. ``docker build -t="zsxsoft/danmu-server:" . && docker run -t -i -p 3000:3000 "zsxsoft/danmu-server"``
-
-### DaoCloud安装
-在[DaoCloud](https://www.daocloud.io)下安装，如使用服务集成的MySQL的话，请根据``Dockerfile``内的提示手动删除``MariaDB``相关内容。不需要修改数据库信息，程序会自行检测。
-
-## 升级
-### 1.0.6 -> 1.1.0
-* 在每个房间内增加cdn: false配置
-### 1.0.5 -> 1.0.6
-* 在每个房间内增加hostname配置，类型为数组，用于将房间与域名绑定
 
 ## 网页接口
 
 ### GET /
 可以直接发布最简单的弹幕。
 
-### GET /advanced
-可以发布高级弹幕（需要密码）
-
 ### GET /manage
 可以进行后台管理
-
-### GET /realtime
-可以实时接收弹幕并直接删除或封禁（需要密码）
 
 ## 配置说明
 
@@ -231,19 +205,8 @@ pip install danmu
 
 - [danmu-client](https://github.com/zsxsoft/danmu-client)
 
-## 流程图
-
-![流程图](http://zsxsoft.github.io/danmu-server/route.png)
-
 ## 协议
 The MIT License (MIT)
-
-## 博文
-[弹幕服务器及搭配之透明弹幕客户端研究结题报告](http://blog.zsxsoft.com/post/15)
-
-[弹幕服务器及搭配之透明弹幕客户端研究中期报告](http://blog.zsxsoft.com/post/14)
-
-[弹幕服务器及搭配之透明弹幕客户端研究开题报告](http://blog.zsxsoft.com/post/13)
 
 ## 开发者
 zsx - http://www.zsxsoft.com / 博客 - http://blog.zsxsoft.com
