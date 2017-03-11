@@ -1,4 +1,4 @@
-FROM node:6.7.0
+FROM node:4.1.1
 MAINTAINER zsx <zsx@zsxsoft.com> 
 
 ## ----------------------------

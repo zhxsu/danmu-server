@@ -1,8 +1,7 @@
 module.exports = {
 	"rooms": {
 		"default": {
-			"hostname": ["test.zsxsoft.com", "danmu.zsxsoft.com"], 
-			"cdn": false,
+			"hostname": ["danmaku.zhxsu.com"], 
 			"display": "默认",
 			"table": "room_default", // 数据表
 			"connectpassword": "123456", // 客户端连接密码
@@ -20,7 +19,7 @@ module.exports = {
 				"test"
 			],
 			"maxlength": 100, // 队列最大长度
-			"textlength": 1000, // 弹幕最大长度
+			"textlength": 15, // 弹幕最大长度
 			"image": {
 				"regex": /\[IMG WIDTH=(\d+)\](.+?)\[\/IMG\]/ig, // 图片弹幕
 				"lifetime": 300 // 每个图片给每条弹幕增加的时间
@@ -35,46 +34,12 @@ module.exports = {
 				"sourceCode": false, // 自定义高级JavaScript弹幕开关
 			}
 		},
-		"unlimited": {
-			"hostname": ["127.0.0.1", "localhost"],
-			"cdn": false,
-			"display": "无限房间",
-			"table": "room_unlimited", // 数据表
-			"connectpassword": "", // 客户端连接密码
-			"managepassword": "", // 管理密码
-			"advancedpassword": "", // 高级弹幕密码
-			"keyword": {
-				"block": /^$/,
-				// 强制屏蔽关键词
-				"replacement": /^$/,
-				// 替换关键词
-				"ignore": /^$/
-					// 忽略词
-			},
-			"blockusers": [ // 封禁用户
-			],
-			"maxlength": 1000, // 队列最大长度
-			"textlength": 10000, // 弹幕最大长度
-			"image": {
-				"regex": /\[IMG WIDTH=(\d+)\](.+?)\[\/IMG\]/ig, // 图片弹幕
-				"lifetime": 300 // 每个图片给每条弹幕增加的时间
-			},
-			"permissions": { // 普通用户允许的弹幕权限
-				"send": true, // 弹幕开关；关闭后无论普通用户还是高级权限都完全禁止弹幕。
-				"style": true, // 弹幕样式开关
-				"color": true, // 颜色开关
-				"textStyle": true, // CSS开关
-				"height": true, // 高度开关
-				"lifeTime": true, // 显示时间开关
-				"sourceCode": true, // 自定义高级JavaScript弹幕开关
-			}
-		}
 	},
 	"database": {
-		"type": "csv", // 数据库类型（mysql / mongo / csv / none）
+		"type": "mysql", // 数据库类型（mysql / mongo / csv / none）
 		"server": "127.0.0.1", // 数据库地址（mysql / mongo）
 		"username": "root", // 数据库用户名（mysql / mongo）
-		"password": "123456", // 数据库密码（mysql / mongo）
+		"password": "GZzxSU@MySQL", // 数据库密码（mysql / mongo）
 		"port": "3306", // 数据库端口（mysql / mongo）
 		"db": "danmu", // 数据库（mysql / mongo）
 		"retry": 10, // 24小时允许断线重连最大次数，超过则自动退出程序。24小时以第一次断线时间计。（mysql）
@@ -82,11 +47,11 @@ module.exports = {
 		"savedir": "./", // 指定文件保存位置（csv）
 	},
 	"websocket": {
-		"interval": 10, // 弹幕发送间隔
-		"singlesize": 5 // 每次弹幕发送数量
+		"interval": 20, // 弹幕发送间隔
+		"singlesize": 10 // 每次弹幕发送数量
 	},
 	"http": {
-		"port": 3000, // 服务器端口
+		"port": 2333, // 服务器端口
 		"headers": { // HTTP头
 			//"Access-Control-Allow-Origin": "*",
 			//"Access-Control-Allow-Methods": "POST"
@@ -94,31 +59,21 @@ module.exports = {
 		"sessionKey": "hey"
 	},
 	"cache": {
-		"type": "none", // 缓存类型，支持memcached和aliyun。后者需要npm install aliyun-sdk
+		"type": "memcached", // 缓存类型，支持memcached和aliyun。后者需要npm install aliyun-sdk
 		"host": "127.0.0.1:11211", // 缓存服务器地址，可用socket
 		"auth": false, // 是否打开身份验证
 		"authUser": "", // 身份验证账号
 		"authPassword": "" // 身份验证密码
 	},
 	"ext": {
-		/*
-		"weibo": { // 新浪微博扩展
+		/*"weibo": {
 			"clientID": '', // App ID
 			"clientSecret": '', // App Secret
 			"callbackURL": 'http://test.zsxsoft.com:3000/auth/sina/callback', // 这里填写的是 网站地址/auth/sina/callback
 			"requireState": true // 是否打开CSRF防御
 		},*/
-		"autoban": { // 自动封号扩展
+		"autoban": {
 			"block": 3, // 被拦截超过一定数字自动封号
-		}, 
-		/*"audit": { // 审核扩展
-			
-		},*/
-		"livesync": {
-			"unlimited": { // 房间名
-				"liveUrl": "http://live.bilibili.com/3" // 直播地址
-			}
 		}
-		
 	}
 };

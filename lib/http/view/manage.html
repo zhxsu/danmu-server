@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="danmu.manage" ng-controller="MainCtrl">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/style.css" rel="stylesheet">
+    <link href="/manage.css" rel="stylesheet">
+    <script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular-ui-bootstrap/0.14.3/ui-bootstrap-tpls.min.js"></script>
+    <title>执信学生会 · 弹幕系统管理</title>
+    <style>
+        p{line-height: 34px}
+        @media(max-width:770px){button{margin-top: 15px}}
+        h3{text-align: center}
+        input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance: none !important;margin: 0; }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header"><a class="navbar-brand" href="#">执信学生会 · 弹幕系统管理</a></div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <uib-alert type="danger" ng-show="haveError">错误{{err.code}}：{{err.desc}}；建议刷新页面。</uib-alert>
+            <div class="col-sm-12 col-md-12 main">
+                <div class="container">
+                    <uib-alert type="danger" ng-show="!isLogin">请在确认房间信息后进行管理。</uib-alert>
+                    <uib-alert type="success" ng-show="isLogin">已连接到{{room}}房间</uib-alert>
+                    <div class="list-group" ng-show="!isLogin">
+                        <a href="#" class="list-group-item" ng-class="{active: room == roomS.id}" ng-repeat="roomS in roomList" ng-click="initRoom(roomS.id)">{{roomS.display}} ({{roomS.id}})</a>
+                    </div>
+                    <center>
+                    <form class="form-horizontal" ng-submit="enterRoom(password)" ng-show="!isLogin">
+                        <div class="form-group">
+                            <p class="col-sm-2 control-p">房间登录密码</p>
+                            <div class="col-sm-8"><input type="password" class="form-control" placeholder="请输入密码" ng-model="password"></div>
+                            <div class="col-sm-1"><button class="btn btn-info" type="submit">确认</button></div>
+                        </div>
+                    </form>
+                    </center>
+                </div>
+                <br>
+                <br>
+                <hr>
+                <br>
+            <h3>弹幕搜索</h3>
+                <div ng-controller="DanmuCtrl" class="container">
+                <center>
+                    <form class="form-horizontal" ng-submit="danmu.doSearch()">
+                        <div class="form-group">
+                            <p class="col-sm-2 control-p">搜索关键词</p>
+                            <div class="col-sm-8"><input type="text" class="form-control" placeholder="搜索弹幕" ng-model="danmu.searchKey"></div>
+                        <div class="col-sm-1"><button class="btn btn-info" type="submit">搜索</button></div>
+                        </div>
+                    </form>
+                </center>
+                    <br>
+                    <div class="row">
+                        <p>
+                            <br/>
+                        </p>
+                        <table class="table table-hover">
+                            <tr>
+                                <th>ID</th>
+                                <th>用户</th>
+                                <th>弹幕</th>
+                            </tr>
+                            <tr ng-repeat="item in danmu.result">
+                                <td>{{item.id}}</td>
+                                <td>{{item.user}}</td>
+                                <td>{{item.text}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <hr>
+                <br>
+            <h3>小黑屋</h3>
+                <div ng-controller="BlockCtrl" class="container">
+                <center>
+                    <form class="form-horizontal" ng-submit="block.doAdd()">
+                        <div class="form-group">
+                            <p class="col-sm-2 control-p">输入用户名</p>
+                            <div class="col-sm-8"><input type="text" class="form-control" placeholder="添加用户" ng-model="block.textUser"></div>
+                            <div class="col-sm-1"><button class="btn btn-info" type="submit">添加</button></div>
+                        </div>
+                    </form>
+                </center>
+                    <div class="row" style="margin-top: 50px">
+                        <button type="button" class="btn btn-info" ng-repeat="item in block.result track by $index" style="margin-right: 5px" ng-click="block.doRemove(item)" ng-value="item" title="点击以取消黑名单">{{item}}</button>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <hr>
+                <br>
+            <h3>权限设置</h3>
+                <div ng-controller="PermissionCtrl" class="container">
+                    <form class="form-horizontal" ng-submit="$submitPermissions()">
+                        <div class="form-group">
+                            <center>
+                            <div>
+                                <button type="button" class="btn btn-info" id="permissionSend" ng-click="$setState('send')">弹幕接收：{{$getStateText('send')}}</button>
+                            </div>
+                            <small>关闭后将不再接收任何新弹幕</small>
+                            </center>
+                        </div>
+                        <center>
+                        <div class="">
+                            <button class="btn btn-info" type="submit">确认</button>
+                        </div>
+                        </center>
+                    </form>
+                </div>
+                <br>
+                <br>
+                <hr>
+                <br>
+            <h3>参数设置</h3>
+                <div ng-controller="ConfigCtrl" class="container">
+                    <form class="form-horizontal" ng-submit="config.submitConfig()">
+                        <div class="form-group">
+                            <p for="configReplaceKeyword" class="col-sm-2 control-p">替换关键词</p>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="configReplaceKeyword" placeholder="" ng-model="config.realConfig.replaceKeyword">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <p for="configBlockKeyword" class="col-sm-2 control-p">拦截关键词</p>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="configBlockKeyword" placeholder="" ng-model="config.realConfig.blockKeyword">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <p for="configIgnoreKeyword" class="col-sm-2 control-p">忽略关键词</p>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="configIgnoreKeyword" placeholder="" ng-model="config.realConfig.ignoreKeyword">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <p for="configSocketInterval" class="col-sm-2 control-p">发送间隔</p>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="configSocketInterval" placeholder="" ng-model="config.realConfig.socketinterval">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <p for="configSocketSingle" class="col-sm-2 control-p">单次发送数</p>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="configSocketSingle" placeholder="" ng-model="config.realConfig.socketsingle">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <p for="configRoomLength" class="col-sm-2 control-p">队列最大长度</p>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="configRoomLength" placeholder="" ng-model="config.realConfig.maxlength">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <p for="configTextLength" class="col-sm-2 control-p">单条最大长度</p>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="configTextLength" placeholder="" ng-model="config.realConfig.textlength">
+                            </div>
+                        </div>
+                        <center>
+                        <div class="row">
+                            <button class="btn btn-info" type="submit">确认配置</button>
+                        </div>
+                        </center>
+                    </form>
+                </div>
+                <br>
+                <br>
+                <hr>
+                <br>
+            <h3>密码设置</h3>
+                <div ng-controller="PasswordCtrl" class="container">
+                    <form class="form-horizontal" ng-submit="$submitPassword('manage')">
+                        <div class="form-group">
+                            <p for="passwordManage" class="col-sm-2 control-p">后台管理密码</p>
+                            <div class="col-sm-8"><input type="password" class="form-control" id="passwordManage" placeholder="" ng-model="config.managepassword"></div>
+                            <div class="col-sm-1"><button class="btn btn-info" type="submit">更新密码</button></div>
+                        </div>
+                    </form>
+                    <form class="form-horizontal" ng-submit="$submitPassword('connect')">
+                        <div class="form-group">
+                            <p for="passwordConnect" class="col-sm-2 control-p">终端连接密码</p>
+                            <div class="col-sm-8"><input type="password" class="form-control" id="passwordConnect" placeholder="" ng-model="config.connectpassword"></div>
+                            <div class="col-sm-1"><button class="btn btn-info" type="submit">更新密码</button></div>
+                        </div>
+                    </form>
+                </div>
+                <center>
+                    <p>原作 by <a href="https://github.com/zsxsoft" target="_blank">zsx</a> · Modified by <a href="https://github.com/df7c5117" target="_blank">df7c5117</a></p>
+                    <p>由<a href="https://zhxsu.com" target="_blank">执信学生会</a> x 执信团委 强力驱动</p>
+                </center>
+            </div>
+        </div>
+    </div>
+    <script src="/manage.js"></script>
+</body>
+
+</html>

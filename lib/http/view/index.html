@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<!--懒得写CSS和一堆JS了，麻烦~-->
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>发送弹幕</title>
+    <link href="/style.css" rel="stylesheet">
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <style type="text/css">
+    body {
+        padding-top: 50px;
+    }
+    
+    .starter-template {
+        padding: 40px 15px;
+        text-align: center;
+    }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="starter-template">
+            <form id="form-ret">
+                <div class="row">
+                    <textarea class="form-control ta" name="text" row="15" id="txt-barrage" style="resize:none;min-height:100px" placeholder="在此处装填你的弹幕..."></textarea>
+                </div>
+                <p>&nbsp;</p>
+                <div class="row">
+                    <button class="form-control btn-info" id="btn-send">喷射</button>
+                </div>
+                <div class="row">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="saveContent">保留发送内容</label>
+                    </div>
+                </div>
+                <input type="hidden" name="type" value="<%=advanced?'advanced':''%>" />
+                <div class="row">
+                    <p>
+                        <br/>
+                    </p>
+                    <p>原作 by <a href="https://github.com/zsxsoft" target="_blank">zsx</a> · Modified by <a href="https://github.com/df7c5117" target="_blank">df7c5117</a></p>
+                    <p>由<a href="https://zhxsu.com" target="_blank">执信学生会</a> x 执信团委 强力驱动</p>
+                    <p>若弹幕无法发送，请尝试刷新页面。</p>
+                    <p>请不要使用过长弹幕（尽量在15个字以内），以免影响观感。</p>
+                    <p>在弹幕上表白、刷屏、使用无意义、不文明语言有被封号的可能。</p>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+    $(function() {
+        var roomsConfig = <%-JSON.stringify(permission)%>;
+        var room = "<%=room%>";
+        var danmuHash = null;
+
+        calculateHash();
+        initializeRoomSelector();
+        bindSendButton();
+
+        function calculateHash() {
+            function b2h(s) {
+                var i, l, n, o = '';
+                s += '';
+                for (i = 0, l = s.length; i < l; i++) {
+                    n = s.charCodeAt(i).toString(16);
+                    o += n.length < 2 ? '0' + n : n;
+                }
+                return o;
+            }
+            
+            // In some modes, localStorage cannot be used.
+            try {
+                danmuHash = localStorage.getItem("danmuHash");
+            } catch (e) {
+                danmuHash = "CANNOT_GET_HASH";
+                // eat it
+            }
+
+            if (danmuHash === null) {
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
+                ctx.textBaseline = "top";
+                ctx.font = "14px '微软雅黑'";
+                ctx.fillStyle = "#0281cd";
+                ctx.fillText("zsx's Danmu Server\n\n弹幕验证帆布指纹", 5, 5);
+                ctx.fillText("http://www.zsxsoft.com/", 5, 30);
+                var b64 = b2h(atob(canvas.toDataURL().replace("data:image/png;base64,", "")).slice(-32, -24));
+                try {
+                    localStorage.danmuHash = b64;
+                } catch (e) {
+                    // Still do nothing
+                }
+            }
+        }
+
+        function initializeRoomSelector() {
+
+            function initializePermissions(room) {
+                for (var item in roomsConfig) {
+                    if (roomsConfig[item]) {
+                        $(".danmu-" + item).show();
+                    }
+                }
+            }
+            initializePermissions(room);
+
+            $("input[name='style']").change(function(e) {
+                if ($(this).val() == "custom") {
+                    $(".danmu-custom").removeClass("hide");
+                } else {
+                    $(".danmu-custom").addClass("hide");
+                }
+            });
+
+        }
+
+        function bindSendButton() {
+
+            $("#btn-send").click(function() {
+                var ret = {};
+                var object = $("#form-ret").serializeArray();
+                for (var i = 0; i < object.length; i++) {
+                    ret[object[i].name] = object[i].value;
+                }
+                ret.hash = danmuHash;
+                $.post("/post", ret).done(function(data) {
+                    alert(data);
+                    if (!$("#saveContent")[0].checked) $("#txt-barrage").val("").focus();
+                    $("#btn-send").removeAttr('disabled');
+                });
+                $("#btn-send").attr("disabled", "disabled");
+            });
+        }
+    });
+    </script>
+</body>
+
+</html>
